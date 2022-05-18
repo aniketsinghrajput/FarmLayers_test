@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>iAvenue Automated Farm Detection</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="../static/main.css" />
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script>window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', 'UA-4335731-27');</script>
+</head>
+
+<body onLoad="init()">
+	<div class="aspNetHidden">
+		<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+		<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+	</div>
+
+	<div class="aspNetHidden">
+		<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="C326A130" />
+		<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION"
+			value="/wEdAAkj9Wl2r8S/nr5mewnqFLhv9mtECd9P+uDY9fia+1URIFJBFS0nSvY+HQsVGA4HBZ4yXxYVHgivSzA/EVRUCHAt4JBf/YdkDJCY6ZPNSVMUdst0CmPTl3dmN6PpxyLUtlgs6bKy+uGaz4F62mUJvwyWBJ32YVd3bgHEwGB2Vd/o058TBhE/OotdVmiygE0Z+b1gbnhLep83CQTMEtopdpSL3zuBLVpTCpRFUGuZAtQ8Zw==" />
+	</div>
+
+	<section class="container-fluid my-5">
+		<h1 style="color:SlateBlue;" style="font-size:50px;"><b>
+				<center>FARM LAYERS by iAvenue Labs</center>
+			</b> </h1>
+		<section class="container-fluid mt-5" id="start">
+			<div class="row">
+				<div class="col-12 col-sm-6 col-md-8">
+					<div class="row">
+						<div class="col-12 col-lg-2 mb-2">
+							<div class="btn-group btn-group-sm w-100 mt-1">
+								<span href="" id="d_move" title="Move map or drag objects"
+									class="btn neo-text-primary"><i class="far fa-hand-paper"></i></span>
+								<span href="" id="d_circle" title="Draw circles" class="btn neo-text-primary"><i
+										class="fas fa-circle"></i></span>
+								<span href="" id="d_square" title="Draw rectangles" class="btn neo-text-primary"><i
+										class="fas fa-square"></i></span>
+								<span href="" id="d_poly" title="Draw polygons" class="btn neo-text-primary"><i
+										class="fas fa-draw-polygon"></i></span>
+								<span href="" id="d_lines" title="Draw Polylines" class="btn neo-text-primary"><i
+										class="fas fa-bezier-curve"></i></span>
+							</div>
+						</div>
+
+						<div class="col-12 col-lg-2 mb-2">
+							<form>
+								<input type="button" class="button btn" id="script-button" value="Snip Area"
+									style="color:rgb(3, 1, 19)"></input>
+							</form>
+						</div>
+						<div class="col-12 mb-4">
+							<input id="pac-input" class="controls" type="text" placeholder="Search Box" />
+							<div id="map_canvas" class="rounded-1" style="width:100%;min-height:500px !important;">
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="col-6 col-md-4"><b>
+						<div class="rounded-1">
+							<h2 style="color:SlateBlue;" style="font-size:50px;">
+								<center>Image Upload</center>
+							</h2>
+					</b>
+					<br><br><br><br><br>
+					<div class="App">
+						<header class="App-header">
+
+							<form>
+								<center><input id="imageinput" type="file" name="image" onchange="readUrl(this)"
+										class="button btn" style="color:rgb(3, 1, 19)" /></center><br><br>
+							</form>
+							<div class="container">
+								<div class="row">
+									<div class="col">
+										<center><button name="send" id="sendbutton" class="button btn"
+												style="color:rgb(3, 1, 19);">Send</button></center>
+									</div>
+									<div class="col">
+										<center><a href="" id="download" class="button btn" download>Download</a>
+										</center><br><br>
+									</div>
+								</div>
+							</div><br>
+							<center><button name="NDVI" id="NDVI" class="button btn"
+								style="color:rgb(3, 1, 19);">NDVI</button></center>
+							<center><b><div id="table-container" style="color:SlateBlue;" style="font-size:80px;"></div></center>
+						</header>
+					</div>
+				</div>
+			</div>
+
+			</div>
+		</section>
+		<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap" rel="stylesheet">
+		<script src="https://code.jquery.com/jquery-3.2.1.js"
+			integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+
+		<script defer src="https://use.fontawesome.com/releases/v5.5.0/js/all.js"
+			integrity="sha384-GqVMZRt5Gn7tB9D9q7ONtcp4gtHIUEW/yG7h98J7IpE3kpi+srfFyyB/04OV6pG0"
+			crossorigin="anonymous"></script>
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?autoload=true"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+		<script>$(document).ready(function () { $("#relatedtools").owlCarousel({ autoplay: true, center: false, loop: true, items: 5, margin: 0, responsive: { 1200: { items: 4 }, 600: { items: 2 }, 320: { items: 1 } } }); });</script>
+		<script
+			src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcJrE5h2_oJLvcIA8Ph0sfNbYNn1No8Rc&callback=initMap&libraries=places,drawing&v=weekly"></script>
+
+
+		<script>
+
+			//Set variable
+			var map, dl_lat, dl_lon, drawingManager, selectedShape, selectedColor;
+			var polyOptions = {};
+			var shapeCollection = [];
+			var infowindow = new google.maps.InfoWindow({ size: new google.maps.Size(250, 100) });
+			var dl_lat = 20.5937;
+			var dl_lon = 78.9629;
+
+			$('#line_color').val("#0062cc");
+			$('#fill_color').val("#133c55");
+			$('#l_color').val("#0062cc");
+			$('#f_color').val("#133c55");
+			$('#line_opacity').val("0.5");
+			$('#opacity').val("0.5");
+			$('#stroke').val("5");
+
+			function clearSelection() {
+				if (selectedShape) {
+					selectedShape.setEditable(false);
+					selectedShape = null;
+				}
+			}
+
+			function setSelection(shape) {
+				var cont, lt, lg;
+				clearSelection();
+				// getting shape coordinates
+				if (shape.type == 'circle') {
+					cont = "Shape Type: <b>" + shape.type.toUpperCase() + "</b><br><small>Shape ID: " + shape.id + "<br>Radius: " + shape.getRadius() + "<br>Center Lat: " + shape.getCenter().lat() + "<br>Center Lng: " + shape.getCenter().lng() + "</small>";
+					lt = shape.getCenter().lat();
+					lg = shape.getCenter().lng();
+				} else if (shape.type == 'rectangle') {
+					var bounds = shape.getBounds();
+					// var polygonCoordinates = shape.coordinates();
+					// print('polygon.coordinates(...) =', polygonCoordinates);
+					//var coordinates = shape.getInfo()
+					var NE = bounds.getNorthEast();
+					print(NE)
+					var SW = bounds.getSouthWest();
+					var NW = new google.maps.LatLng(SW.lng(),NE.lat());
+        			var SE = new google.maps.LatLng(NE.lng(),SW.lat());
+					var coordinate_rect = NE+","+NW+","+SE+","+SW+","+NE;
+					const cr = JSON.stringify(coordinate_rect);
+					console.log(cr);
+					$("#NDVI").click(() => {
+					$.ajax({
+            		url:"/NDVI",
+            		type:"POST",
+            		contentType: "application/json",
+            		data: JSON.stringify(cr)});
+					});
+					cont = "Shape Type: <b>" + shape.type.toUpperCase() + "</b><br><small>Shape ID: " + shape.id +"<br>" + NE+SW+SE+NW + "<br>Center Lat: " + bounds.getCenter().lat().toFixed(3) + "<br>Center Lng: " + bounds.getCenter().lng().toFixed(3) + "</small>" ;//+ "<br><b>coordinates:</b> " + google.maps.LatLngBoundsLiteral(bounds)
+					lt = bounds.getCenter().lat();
+					lg = bounds.getCenter().lng();
+				}
+				else {
+					var v = shape.getPath();
+					console.log(v);
+					cont = "<br>Shape Type: <b>" + shape.type.toUpperCase() + "</b><br><small>Shape ID: " + shape.id + "<br><b>Vertices: " + v.getLength() + "</b><br>Area: " + google.maps.geometry.spherical.computeArea(v).toFixed(2) + " m²" + "</b><br>Perimeter: " + google.maps.geometry.spherical.computeLength(v).toFixed(2) + " m</small>"; //google.maps.geometry.spherical.computeArea(yourPolygon.getPath());
+					for (var i = 0; i < v.getLength(); i++) {
+						var xy = v.getAt(i);
+						lt = xy.lat();
+						lg = xy.lng();
+					}
+				}
+				// remove shape
+				infowindow.setContent("<p>" + cont + "</p><a hre='' title='Remove this " + shape.type + "' class='text-danger' onclick='deleteSelectedShape();return false;' id='del" + shape.id + "'><i class='fas fa-trash-alt'></i> Remove this shape</a>");
+				infowindow.setPosition({ lat: lt, lng: lg });
+				infowindow.open(map);
+
+				selectedShape = shape;
+				shape.setEditable(true);
+
+				var insert = true;
+				for (var i = 0; i < shapeCollection.length; i++) { if (shapeCollection[i].id === selectedShape.id) { insert = false } };
+				if (insert) { shapeCollection.push(selectedShape); }
+
+				selectStyle();
+			}
+
+			function deleteSelectedShape() {
+				if (selectedShape) {
+					for (var i = 0; i <  Collection.length; i++) {
+						if (shapeCollection[i].id === selectedShape.id) {
+							console.log("delete " + selectedShape.id);
+							shapeCollection.splice(i, 1);
+						}
+					};
+					selectedShape.setMap(null);
+					infowindow.close();
+				}
+			}
+
+			function selectStyle() {
+				if (selectedShape) {
+					selectedShape.set('fillColor', $('#f_color').val());
+					selectedShape.set('fillOpacity', $("#opacity").val());
+					selectedShape.set('strokeColor', $('#l_color').val());
+					selectedShape.set('strokeOpacity', $("#line_opacity").val());
+					selectedShape.set('strokeWeight', $("#stroke").val());
+				}
+			}
+
+			function setSelectedStyle() {
+				if (selectedShape) {
+					var newOptions = {
+						fillColor: $('#f_color').val(),
+						fillOpacity: $("#opacity").val(),
+						strokeColor: $('#l_color').val(),
+						strokeOpacity: $("#line_opacity").val(),
+						strokeWeight: $("#stroke").val(),
+						clickable: true, editable: true, draggable: true, zIndex: 1
+					};
+					if (selectedShape.type !== google.maps.drawing.OverlayType.MARKER) {
+						selectedShape.set('fillColor', $('#f_color').val());
+						selectedShape.set('fillOpacity', $("#opacity").val());
+						selectedShape.set('strokeColor', $('#l_color').val());
+						selectedShape.set('strokeOpacity', $("#line_opacity").val());
+						selectedShape.set('strokeWeight', $("#stroke").val());
+					}
+				}
+			}
+			//build map preview
+			function init() {
+				var myLatlng = new google.maps.LatLng(dl_lat, dl_lon);
+				var mapOptions = {
+					zoom: 18,
+					center: myLatlng,
+					mapTypeId: 'hybrid',
+					mapTypeControl: false,
+					zoomControl: true,
+					scaleControl: false,
+					streetViewControl: false,
+					rotateControl: false,
+					fullscreenControl: true
+				};
+				//load map
+				map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+				//load search box
+				var input = document.getElementById('pac-input');
+				var searchBox = new google.maps.places.SearchBox(input);
+				map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+				// Bias the SearchBox results towards current map's viewport.
+				map.addListener('bounds_changed', function () {
+					searchBox.setBounds(map.getBounds());
+				});
+
+				var markers = [];
+				// Listen for the event fired when the user selects a prediction and retrieve
+				// more details for that place.
+				searchBox.addListener('places_changed', function () {
+					var places = searchBox.getPlaces();
+
+					if (places.length == 0) {
+						return;
+					}
+
+					// Clear out the old markers.
+					markers.forEach(function (marker) {
+						marker.setMap(null);
+					});
+					markers = [];
+
+					// For each place, get the icon, name and location.
+					var bounds = new google.maps.LatLngBounds();
+					places.forEach(function (place) {
+						if (!place.geometry) {
+							console.log("Returned place contains no geometry");
+							return;
+						}
+						var icon = {
+							url: place.icon,
+							size: new google.maps.Size(71, 71),
+							origin: new google.maps.Point(0, 0),
+							anchor: new google.maps.Point(17, 34),
+							scaledSize: new google.maps.Size(25, 25)
+						};
+
+						// Create a marker for each place.
+						markers.push(new google.maps.Marker({
+							map: map,
+							icon: icon,
+							title: place.name,
+							position: place.geometry.location
+						}));
+
+						if (place.geometry.viewport) {
+							// Only geocodes have viewport.
+							bounds.union(place.geometry.viewport);
+						} else {
+							bounds.extend(place.geometry.location);
+						}
+					});
+					map.fitBounds(bounds);
+				});
+				var markerOptions = {
+					icon: "https://www.seochecker.it/img/ico/marker.png",
+					clickable: true, editable: false, draggable: true, zIndex: 1
+				}
+
+
+				polyOptions = {
+					fillColor: "#133c55",
+					fillOpacity: 0.5,
+					strokeColor: "#0062cc",
+					strokeOpacity: 0.5,
+					strokeWeight: 5,
+					clickable: true, editable: true, draggable: true, zIndex: 1
+				};
+
+				drawingManager = new google.maps.drawing.DrawingManager({
+					drawingMode: google.maps.drawing.OverlayType.POLYGON,
+					drawingControl: false,
+					markerOptions: markerOptions,
+					polylineOptions: polyOptions,
+					rectangleOptions: polyOptions,
+					circleOptions: polyOptions,
+					polygonOptions: polyOptions,
+					map: map
+				});
+
+				google.maps.event.addListener(drawingManager, 'overlaycomplete', function (e) {
+					if (e.type !== google.maps.drawing.OverlayType.MARKER) {
+						// Switch back to non-drawing mode after drawing a shape.
+						drawingManager.setDrawingMode(null);
+						// Add an event listener that selects the newly-drawn shape when the user mouses down on it.
+						var newShape = e.overlay;
+						newShape.type = e.type;
+						newShape.id = new Date().getTime() + '_' + Math.floor(Math.random() * 1000);
+						shapeCollection[newShape.id] = newShape;
+
+						google.maps.event.addListener(newShape, 'click', function (e) {
+							if (e.vertex !== undefined) {
+								if (newShape.type === google.maps.drawing.OverlayType.POLYGON) {
+									var path = newShape.getPaths().getAt(e.path);
+									path.removeAt(e.vertex);
+									if (path.length < 3) { newShape.setMap(null); }
+								}
+								if (newShape.type === google.maps.drawing.OverlayType.POLYLINE) {
+									var path = newShape.getPath();
+									path.removeAt(e.vertex);
+									if (path.length < 2) { newShape.setMap(null); }
+								}
+							}
+							setSelection(newShape);
+						});
+						setSelection(newShape);
+					}
+
+				});
+				// Clear the current selection when the drawing mode is changed, or when the map is clicked.
+				google.maps.event.addListener(drawingManager, 'drawingmode_changed', clearSelection);
+				google.maps.event.addListener(map, 'click', function () { clearSelection; infowindow.close(); });
+
+				$("#sendbutton").click(() => {
+					imagebox = $("#imagebox");
+					link = $("#link");
+					input = $("#imageinput")[0];
+					if (input.files && input.files[0]) {
+						let formData = new FormData();
+						formData.append("video", input.files[0]);
+						$.ajax({
+							url: "/detect", // fix this to your liking
+							type: "POST",
+							data: formData,
+							cache: false,
+							processData: false,
+							contentType: false,
+							error: function (data) {
+								console.log("upload error", data);
+								console.log(data.getAllResponseHeaders());
+							},
+							success: function (data) {
+								console.log(data);
+								// bytestring = data["status"];
+								// image = bytestring.split("'")[1];
+								$("#link").css("visibility", "visible");
+								$("#download").attr("href", "static/" + data["img"]);
+								$("#table-container").html("Total number of Farms: "+data["num"]); 
+								console.log("after",data);
+								var f=data["num"]
+								console.log("no. of",f)
+							},
+						});
+					}
+				});
+
+				$("#script-button").click(function (e) {
+					e.preventDefault();
+					$.ajax({
+						type: "POST",
+						url: "/script-button",
+						cache: false,
+						context: document.body
+
+					});
+				});
+
+				// $("#NDVI").click(() => {
+				// $.ajax({
+            	// url:"/NDVI",
+            	// type:"POST",
+            	// contentType: "application/json",
+            	// data: JSON.stringify(cr)});
+				// });
+
+				function readUrl(input) {
+					imagebox = $("#imagebox");
+					console.log(imagebox);
+					console.log("evoked readUrl");
+					if (input.files && input.files[0]) {
+						let reader = new FileReader();
+						reader.onload = function (e) {
+							console.log(e.target);
+
+							imagebox.attr("src", e.target.result);
+							//   imagebox.height(500);
+							//   imagebox.width(800);
+						};
+						reader.readAsDataURL(input.files[0]);
+					}
+				}
+
+			}
+			$('#d_move').click(function () {
+				if (drawingManager.getDrawingMode()) { drawingManager.setDrawingMode(null); } else { drawingManager.setDrawingMode(null); };
+				drawingManager.setDrawingMode(null);
+			});
+			document.getElementById("d_circle").addEventListener("click", function () { drawingManager.setDrawingMode(google.maps.drawing.OverlayType.CIRCLE); });
+			document.getElementById("d_square").addEventListener("click", function () { drawingManager.setDrawingMode(google.maps.drawing.OverlayType.RECTANGLE); });
+			document.getElementById("d_poly").addEventListener("click", function () { drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON); });
+			document.getElementById("d_lines").addEventListener("click", function () { drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYLINE); });
+
+			$('#start-code').click(function () {
+				var output, shape;
+				output = "";
+				for (var i = 0; i < shapeCollection.length; i++) {
+					console.log(shapeCollection[i]);
+					shape = shapeCollection[i];
+					if (shape.type == 'circle') {
+						output += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const shape_" + i + " = new google.maps." + capitalize(shape.type) + "({strokeColor:'" + shape.strokeColor + "',strokeOpacity:" + shape.strokeOpacity + ",strokeWeight:" + shape.strokeWeight + ",fillColor:'" + shape.fillColor + "',fillOpacity:" + shape.fillOpacity + ",center:{lat:" + shape.getCenter().lat() + ",lng:" + shape.getCenter().lng() + "},radius:" + shape.getRadius() + "});<br>";
+						output += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shape_" + i + ".setMap(map);<br>";
+					} else if (shape.type == 'rectangle') {
+						var bounds = shape.getBounds();
+						output += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const shape_" + i + " = new google.maps." + capitalize(shape.type) + "({strokeColor:'" + shape.strokeColor + "',strokeOpacity:" + shape.strokeOpacity + ",strokeWeight:" + shape.strokeWeight + ",fillColor:'" + shape.fillColor + "',fillOpacity:" + shape.fillOpacity + ",bounds:{north:" + bounds.getNorthEast().lat() + ",east:" + bounds.getNorthEast().lng() + ",south:" + bounds.getSouthWest().lat() + ",west:" + bounds.getSouthWest().lng() + "}});<br>";
+						output += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shape_" + i + ".setMap(map);<br>";
+					}
+					else if (shape.type == 'polyline') {
+						output += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const shape_" + i + " = new google.maps." + capitalize(shape.type) + "({strokeColor:'" + shape.strokeColor + "',strokeOpacity:" + shape.strokeOpacity + ",strokeWeight:" + shape.strokeWeight + ",path:[";
+						var v = shape.getPath();
+						for (var g = 0; g < v.getLength(); g++) {
+							var xy = v.getAt(g);
+							output += "{lat:" + xy.lat() + ", lng:" + xy.lng() + "},"
+						}
+						output += "]});<br>"
+						output += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shape_" + i + ".setMap(map);<br>";
+					} else if (shape.type == 'polygon') {
+						output += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const shape_" + i + " = new google.maps." + capitalize(shape.type) + "({strokeColor:'" + shape.strokeColor + "',strokeOpacity:" + shape.strokeOpacity + ",strokeWeight:" + shape.strokeWeight + ",fillColor:'" + shape.fillColor + "',fillOpacity:" + shape.fillOpacity + ",path:[";
+						var v = shape.getPath();
+						for (var g = 0; g < v.getLength(); g++) {
+							var xy = v.getAt(g);
+							output += "{lat:" + xy.lat() + ", lng:" + xy.lng() + "},"
+						}
+						output += "]});<br>"
+						output += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shape_" + i + ".setMap(map);<br>";
+					}
+				}
+
+
+
+				$('#btncopy').click(function () { var id = $(this).attr('id'); var clipboard = new Clipboard('#' + id); clipboard.on('success', function (e) { alert("Copied to clipboard"); }); clipboard.on('error', function (e) { console.log(e); }); });
+			});
+		</script>
+
+</body>
+
+</html>
